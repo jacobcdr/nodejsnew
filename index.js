@@ -1,20 +1,19 @@
-var cirkel = document.getElementById("animeraCirkel");
-var posX = 0;
-var posY = 0;
-var dx = 2;
-var dy = 2;
+const http = require('http');
+const fs = require('fs');
+const PORT = 3000;
 
-function flyttaCirkel() {
-  posX += dx;
-  posY += dy;
+const server = http.createServer((req, res) => {
+  fs.readFile('index.html', (err, data) => {
+    if (err) {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('Error loading the page');
+    } else {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html');
+      res.end(data);
+    }
+  });
+});
 
-  if(posX > window.innerWidth - 50 || posX < 0) dx = -dx;
-  if(posY > window.innerHeight - 50 || posY < 0) dy = -dy;
-
-  cirkel.style.left = posX + 'px';
-  cirkel.style.top = posY + 'px';
-
-  requestAnimationFrame(flyttaCirkel);
-}
-
-flyttaCirkel();
+server.listen(PORT, () => {
